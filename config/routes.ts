@@ -1,14 +1,6 @@
 /**
- * @name umi 的路由配置
- * @description 只支持 path,component,routes,redirect,wrappers,name,icon 的配置
- * @param path  path 只支持两种占位符配置，第一种是动态参数 :id 的形式，第二种是 * 通配符，通配符只能出现路由字符串的最后。
- * @param component 配置 location 和 path 匹配后用于渲染的 React 组件路径。可以是绝对路径，也可以是相对路径，如果是相对路径，会从 src/pages 开始找起。
- * @param routes 配置子路由，通常在需要为多个路径增加 layout 组件时使用。
- * @param redirect 配置路由跳转
- * @param wrappers 配置路由组件的包装组件，通过包装组件可以为当前的路由组件组合进更多的功能。 比如，可以用于路由级别的权限校验
- * @param name 配置路由的标题，默认读取国际化文件 menu.ts 中 menu.xxxx 的值，如配置 name 为 login，则读取 menu.ts 中 menu.login 的取值作为标题
- * @param icon 配置路由的图标，取值参考 https://ant.design/components/icon-cn， 注意去除风格后缀和大小写，如想要配置图标为 <StepBackwardOutlined /> 则取值应为 stepBackward 或 StepBackward，如想要配置图标为 <UserOutlined /> 则取值应为 user 或者 User
- * @doc https://umijs.org/docs/guides/routes
+ * umi 的路由配置 —— 智能物业管理系统
+ * 一级菜单：系统基础服务 /property、财务服务 /property
  */
 export default [
   {
@@ -24,274 +16,350 @@ export default [
         path: '/user',
         redirect: '/user/login',
       },
-      {
-        name: 'register-result',
-        icon: 'checkCircle',
-        path: '/user/register-result',
-        component: './user/register-result',
-      },
-      {
-        name: 'register',
-        icon: 'userAdd',
-        path: '/user/register',
-        component: './user/register',
-      },
-      {
-        name: '404',
-        component: './exception/404',
-        path: '/user/*',
-      },
     ],
   },
   {
     path: '/welcome',
     name: 'welcome',
     icon: 'home',
-    component: './Welcome',
+    component: './Home',
   },
+
+  // ========== 个人设置（隐藏菜单，仅头像下拉跳转） ==========
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/admin',
-        redirect: '/admin/sub-page',
-      },
-      {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
-      },
-    ],
-  },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    icon: 'dashboard',
-    routes: [
-      {
-        path: '/dashboard',
-        redirect: '/dashboard/analysis',
-      },
-      {
-        name: 'analysis',
-        icon: 'barChart',
-        path: '/dashboard/analysis',
-        component: './dashboard/analysis',
-      },
-      {
-        name: 'monitor',
-        icon: 'monitor',
-        path: '/dashboard/monitor',
-        component: './dashboard/monitor',
-      },
-      {
-        name: 'workplace',
-        icon: 'desktop',
-        path: '/dashboard/workplace',
-        component: './dashboard/workplace',
-      },
-    ],
-  },
-  {
-    path: '/form',
-    icon: 'form',
-    name: 'form',
-    routes: [
-      {
-        path: '/form',
-        redirect: '/form/basic-form',
-      },
-      {
-        name: 'basic-form',
-        icon: 'form',
-        path: '/form/basic-form',
-        component: './form/basic-form',
-      },
-      {
-        name: 'step-form',
-        icon: 'orderedList',
-        path: '/form/step-form',
-        component: './form/step-form',
-      },
-      {
-        name: 'advanced-form',
-        icon: 'profile',
-        path: '/form/advanced-form',
-        component: './form/advanced-form',
-      },
-    ],
-  },
-  {
-    path: '/list',
-    icon: 'table',
-    name: 'list',
-    routes: [
-      {
-        path: '/list/search',
-        name: 'search-list',
-        component: './list/search',
-        routes: [
-          {
-            path: '/list/search',
-            redirect: '/list/search/articles',
-          },
-          {
-            name: 'articles',
-            icon: 'read',
-            path: '/list/search/articles',
-            component: './list/search/articles',
-          },
-          {
-            name: 'projects',
-            icon: 'project',
-            path: '/list/search/projects',
-            component: './list/search/projects',
-          },
-          {
-            name: 'applications',
-            icon: 'appstore',
-            path: '/list/search/applications',
-            component: './list/search/applications',
-          },
-        ],
-      },
-      {
-        path: '/list',
-        redirect: '/list/table-list',
-      },
-      {
-        name: 'table-list',
-        icon: 'table',
-        path: '/list/table-list',
-        component: './table-list',
-      },
-      {
-        name: 'basic-list',
-        icon: 'unorderedList',
-        path: '/list/basic-list',
-        component: './list/basic-list',
-      },
-      {
-        name: 'card-list',
-        icon: 'creditCard',
-        path: '/list/card-list',
-        component: './list/card-list',
-      },
-    ],
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    icon: 'profile',
-    routes: [
-      {
-        path: '/profile',
-        redirect: '/profile/basic',
-      },
-      {
-        name: 'basic',
-        icon: 'idcard',
-        path: '/profile/basic',
-        component: './profile/basic',
-      },
-      {
-        name: 'advanced',
-        icon: 'crown',
-        path: '/profile/advanced',
-        component: './profile/advanced',
-      },
-    ],
-  },
-  {
-    name: 'result',
-    icon: 'checkCircle',
-    path: '/result',
-    routes: [
-      {
-        path: '/result',
-        redirect: '/result/success',
-      },
-      {
-        name: 'success',
-        icon: 'checkCircle',
-        path: '/result/success',
-        component: './result/success',
-      },
-      {
-        name: 'fail',
-        icon: 'closeCircle',
-        path: '/result/fail',
-        component: './result/fail',
-      },
-    ],
-  },
-  {
-    name: 'exception',
-    icon: 'warning',
-    path: '/exception',
-    routes: [
-      {
-        path: '/exception',
-        redirect: '/exception/403',
-      },
-      {
-        name: '403',
-        icon: 'stop',
-        path: '/exception/403',
-        component: './exception/403',
-      },
-      {
-        name: '404',
-        icon: 'warning',
-        path: '/exception/404',
-        component: './exception/404',
-      },
-      {
-        name: '500',
-        icon: 'bug',
-        path: '/exception/500',
-        component: './exception/500',
-      },
-    ],
-  },
-  {
-    name: 'account',
-    icon: 'user',
     path: '/account',
+    layout: false,
     routes: [
       {
-        path: '/account',
-        redirect: '/account/center',
-      },
-      {
-        name: 'center',
-        icon: 'user',
-        path: '/account/center',
-        component: './account/center',
-      },
-      {
-        name: 'settings',
-        icon: 'setting',
         path: '/account/settings',
+        name: 'settings',
         component: './account/settings',
       },
     ],
   },
+
+  // ========== 系统基础服务 ==========
   {
-    path: '/chatbot',
-    name: 'chatbot',
-    icon: 'robot',
-    component: './chatbot',
+    path: '/system',
+    name: 'system',
+    icon: 'setting',
+    access: 'canAdmin',
+    routes: [
+      { path: '/system', redirect: '/system/user' },
+      {
+        path: '/system/user',
+        name: 'user',
+        icon: 'user',
+        component: './system/User',
+      },
+      {
+        path: '/system/role',
+        name: 'role',
+        icon: 'safety',
+        component: './system/Role',
+      },
+      {
+        path: '/system/menu',
+        name: 'menu',
+        icon: 'menu',
+        component: './system/Menu',
+      },
+      {
+        path: '/system/dept',
+        name: 'dept',
+        icon: 'cluster',
+        component: './system/Dept',
+      },
+      {
+        path: '/system/dict',
+        name: 'dict',
+        icon: 'book',
+        component: './system/Dict',
+      },
+      {
+        path: '/system/company',
+        name: 'company',
+        icon: 'bank',
+        component: './system/Company',
+      },
+      {
+        path: '/system/login-log',
+        name: 'login-log',
+        icon: 'file-text',
+        component: './system/LoginLog',
+      },
+      {
+        path: '/system/oper-log',
+        name: 'oper-log',
+        icon: 'profile',
+        component: './system/OperLog',
+      },
+    ],
   },
+
+  // ========== 房产财务服务 ==========
   {
-    path: '/',
-    redirect: '/dashboard/analysis',
+    path: '/property',
+    name: 'property',
+    icon: 'bank',
+    routes: [
+      { path: '/property', redirect: '/property/community' },
+
+      // ---- 房产 ----
+      {
+        path: '/property/community',
+        name: 'community',
+        icon: 'home',
+        component: './property/Community',
+      },
+      {
+        path: '/property/building',
+        name: 'building',
+        icon: 'apartment',
+        component: './property/Building',
+      },
+      {
+        path: '/property/unit',
+        name: 'unit',
+        icon: 'layout',
+        component: './property/Unit',
+      },
+      {
+        path: '/property/room',
+        name: 'room',
+        icon: 'appstore',
+        component: './property/Room',
+      },
+      // ---- 业主/租户 ----
+      {
+        path: '/property/owner',
+        name: 'owner',
+        icon: 'user',
+        component: './property/Owner',
+      },
+      {
+        path: '/property/tenant',
+        name: 'tenant',
+        icon: 'team',
+        component: './property/Tenant',
+      },
+      // ---- 销售/验房/装修 ----
+      {
+        path: '/property/sale-contract',
+        name: 'sale-contract',
+        icon: 'file-protect',
+        component: './property/SaleContract',
+      },
+      {
+        path: '/property/check-record',
+        name: 'check-record',
+        icon: 'audit',
+        component: './property/CheckRecord',
+      },
+      {
+        path: '/property/decoration',
+        name: 'decoration',
+        icon: 'tool',
+        component: './property/Decoration',
+      },
+      // ---- 租赁 ----
+      {
+        path: '/property/lease-contract',
+        name: 'lease-contract',
+        icon: 'file-text',
+        component: './property/LeaseContract',
+      },
+      // ---- 财务 ----
+      {
+        path: '/property/fee-item',
+        name: 'fee-item',
+        icon: 'gold',
+        component: './property/FeeItem',
+      },
+      {
+        path: '/property/ledger',
+        name: 'ledger',
+        icon: 'book',
+        component: './property/Ledger',
+      },
+      {
+        path: '/property/payment',
+        name: 'payment',
+        icon: 'pay-circle',
+        component: './property/Payment',
+      },
+      {
+        path: '/property/invoice',
+        name: 'invoice',
+        icon: 'receipt',
+        component: './property/Invoice',
+      },
+      {
+        path: '/property/parking',
+        name: 'parking',
+        icon: 'car',
+        component: './property/Parking',
+      },
+      {
+        path: '/property/prepayment',
+        name: 'prepayment',
+        icon: 'wallet',
+        component: './property/Prepayment',
+      },
+      {
+        path: '/property/meter-reading',
+        name: 'meter-reading',
+        icon: 'dashboard',
+        component: './property/MeterReading',
+      },
+    ],
   },
+
+  // ========== 运营管理服务 ==========
   {
-    component: './exception/404',
-    path: '/*',
+    path: '/operation',
+    name: 'operation',
+    icon: 'appstore',
+    routes: [
+      { path: '/operation', redirect: '/operation/service-order' },
+
+      // ---- 服务工单 ----
+      {
+        path: '/operation/service-order',
+        name: 'service-order',
+        icon: 'customer-service',
+        component: './operation/ServiceOrder',
+      },
+      // ---- 保洁绿化 ----
+      {
+        path: '/operation/clean-arrange',
+        name: 'clean-arrange',
+        icon: 'clear',
+        component: './operation/CleanArrange',
+      },
+      {
+        path: '/operation/clean-check',
+        name: 'clean-check',
+        icon: 'file-done',
+        component: './operation/CleanCheck',
+      },
+      {
+        path: '/operation/greenery',
+        name: 'greenery',
+        icon: 'tree',
+        component: './operation/Greenery',
+      },
+      {
+        path: '/operation/greenery-check',
+        name: 'greenery-check',
+        icon: 'audit',
+        component: './operation/GreeneryCheck',
+      },
+      // ---- 消防安全 ----
+      {
+        path: '/operation/fire-facility',
+        name: 'fire-facility',
+        icon: 'fire',
+        component: './operation/FireFacility',
+      },
+      {
+        path: '/operation/fire-patrol',
+        name: 'fire-patrol',
+        icon: 'security-scan',
+        component: './operation/FirePatrol',
+      },
+      {
+        path: '/operation/fire-drill',
+        name: 'fire-drill',
+        icon: 'alert',
+        component: './operation/FireDrill',
+      },
+      {
+        path: '/operation/community-activity',
+        name: 'community-activity',
+        icon: 'team',
+        component: './operation/CommunityActivity',
+      },
+      // ---- 保安管理 ----
+      {
+        path: '/operation/security-arrange',
+        name: 'security-arrange',
+        icon: 'safety-certificate',
+        component: './operation/SecurityArrange',
+      },
+      {
+        path: '/operation/duty-record',
+        name: 'duty-record',
+        icon: 'schedule',
+        component: './operation/DutyRecord',
+      },
+      {
+        path: '/operation/visit-record',
+        name: 'visit-record',
+        icon: 'login',
+        component: './operation/VisitRecord',
+      },
+      {
+        path: '/operation/goods-record',
+        name: 'goods-record',
+        icon: 'inbox',
+        component: './operation/GoodsRecord',
+      },
+      // ---- 停车管理 ----
+      {
+        path: '/operation/vehicle-record',
+        name: 'vehicle-record',
+        icon: 'car',
+        component: './operation/VehicleRecord',
+      },
+      // ---- 行政管理 ----
+      {
+        path: '/operation/notice',
+        name: 'notice',
+        icon: 'notification',
+        component: './operation/Notice',
+      },
+      {
+        path: '/operation/regulation',
+        name: 'regulation',
+        icon: 'read',
+        component: './operation/Regulation',
+      },
+      {
+        path: '/operation/opinion-box',
+        name: 'opinion-box',
+        icon: 'message',
+        component: './operation/OpinionBox',
+      },
+      {
+        path: '/operation/survey',
+        name: 'survey',
+        icon: 'like',
+        component: './operation/Survey',
+      },
+      {
+        path: '/operation/message',
+        name: 'message',
+        icon: 'mail',
+        component: './operation/Message',
+      },
+      // ---- 业委会 ----
+      {
+        path: '/operation/committee-member',
+        name: 'committee-member',
+        icon: 'user',
+        component: './operation/CommitteeMember',
+      },
+      {
+        path: '/operation/committee-meeting',
+        name: 'committee-meeting',
+        icon: 'calendar',
+        component: './operation/CommitteeMeeting',
+      },
+    ],
   },
+
+  // 默认 & 404
+  { path: '/', redirect: '/welcome' },
+  { component: './exception/404', path: '/*' },
 ];

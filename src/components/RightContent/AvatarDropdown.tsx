@@ -7,7 +7,7 @@ import { history, useModel } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
 import React, { startTransition } from 'react';
-import { outLogin } from '@/services/ant-design-pro/api';
+import { logout } from '@/services/smart-property/auth';
 import HeaderDropdown from '../HeaderDropdown';
 
 type GlobalHeaderRightProps = {
@@ -18,7 +18,7 @@ const menuItems: MenuProps['items'] = [
   {
     key: 'settings',
     icon: <SettingOutlined />,
-    label: '个人设置',
+    label: '个人中心',
   },
   {
     key: 'theme',
@@ -37,9 +37,9 @@ const menuItems: MenuProps['items'] = [
 
 const loginOut = async () => {
   try {
-    await outLogin();
+    await logout();
   } catch {
-    // Local logout has already cleared user state; redirect should still proceed.
+    // logout API failed; still clear local state and redirect.
   }
   const { search, pathname } = window.location;
   const urlParams = new URL(window.location.href).searchParams;

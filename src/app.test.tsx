@@ -18,18 +18,16 @@ vi.mock('@umijs/max', () => ({
   Link: ({ children }: any) => children,
 }));
 
-vi.mock('@/services/ant-design-pro/api', () => ({
-  currentUser: mockQueryCurrentUser,
+vi.mock('@/services/smart-property/auth', () => ({
+  queryCurrentUser: mockQueryCurrentUser,
 }));
 
 vi.mock('@/components', () => ({
   AvatarDropdown: () => null,
-  DocLink: () => null,
   ErrorBoundary: ({ children }: any) => children,
   Footer: () => null,
   LangDropdown: () => null,
   OfflineBanner: () => null,
-  VersionDropdown: () => null,
 }));
 
 vi.mock('@ant-design/pro-components', () => ({
@@ -42,6 +40,9 @@ vi.mock('@ant-design/icons', () => ({
 
 vi.mock('./requestErrorConfig', () => ({
   errorConfig: {},
+  loginPath: '/user/login',
+  ACCESS_TOKEN_KEY: 'sp_access_token',
+  REFRESH_TOKEN_KEY: 'sp_refresh_token',
 }));
 
 vi.mock('../config/defaultSettings', () => ({
@@ -51,6 +52,8 @@ vi.mock('../config/defaultSettings', () => ({
 describe('app getInitialState', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // fetchUserInfo 仅在已登录（存在 token）时拉取用户信息
+    localStorage.setItem('sp_access_token', 'test-token');
     mockHistory.location = {
       pathname: '/welcome',
       search: '',

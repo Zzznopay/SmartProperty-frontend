@@ -114,7 +114,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: 'Ant Design Pro',
+  title: '智能物业管理系统',
   layout: {
     locale: true,
     ...defaultSettings,
@@ -136,8 +136,9 @@ export default defineConfig({
     // default zh-CN
     default: 'zh-CN',
     antd: true,
-    // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    // false: 固定使用 default(zh-CN)，避免浏览器语言覆盖后加载到缺少业务菜单翻译的其他语言，
+    // 导致菜单回退显示路由 name 原文(如 system.user)
+    baseNavigator: false,
   },
   /**
    * @name antd 插件

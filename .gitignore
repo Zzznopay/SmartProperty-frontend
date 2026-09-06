@@ -52,3 +52,8 @@ docs/superpowers
 # cloudflare wrangler
 .wrangler
 requestRecord.mock.js
+
+# AI 协作过程文件（本地工作笔记，不上传）
+/task_plan.md
+/progress.md
+/findings.md

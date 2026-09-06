@@ -1,108 +1,171 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
-import { getIntl } from '@umijs/max';
-import { message, notification } from 'antd';
+import { getIntl, history } from '@umijs/max';
+import { message } from 'antd';
 
-// 错误处理方案： 错误类型
-enum ErrorShowType {
-  SILENT = 0,
-  WARN_MESSAGE = 1,
-  ERROR_MESSAGE = 2,
-  NOTIFICATION = 3,
-  REDIRECT = 9,
-}
-// 与后端约定的响应数据格式
-interface ResponseStructure {
-  success: boolean;
-  data: unknown;
-  errorCode?: number;
-  errorMessage?: string;
-  showType?: ErrorShowType;
+// 业务成功码约定：与后端 smart-property-common-core 一致
+const SUCCESS_CODE = '00000';
+
+// Token 存储 key（与 auth.ts 配套）
+const ACCESS_TOKEN_KEY = 'sp_access_token';
+const REFRESH_TOKEN_KEY = 'sp_refresh_token';
+
+const isDev = process.env.NODE_ENV === 'development';
+const loginPath = '/user/login';
+
+// 后端统一响应格式 { code, message, data, ...? (分页) }
+interface BizResponse<T = unknown> {
+  code: string;
+  message?: string;
+  data?: T;
+  // 分页响应（在 data 外的扁平字段）
+  total?: number;
+  pageNum?: number;
+  pageSize?: number;
+  pages?: number;
+  records?: T[];
 }
 
 /**
- * @name 错误处理
- * pro 自带的错误处理， 可以在这里做自己的改动
- * @doc https://umijs.org/docs/max/request#配置
+ * 是否"分页类"请求：
+ *  - GET + current/pageSize params  → 当作 ProTable request
  */
+function isTableLikeRequest(config: RequestOptions | undefined): boolean {
+  if (!config) return false;
+  const method = (config.method || 'GET').toUpperCase();
+  if (method !== 'GET') return false;
+  const params = (config.params ?? {}) as {
+    current?: number;
+    pageSize?: number;
+  };
+  return params.current !== undefined || params.pageSize !== undefined;
+}
+
+/** 把 ProTable params 转成后端约定 */
+function toBackendQuery(params: Record<string, unknown>) {
+  const { current, pageSize, ...rest } = params as {
+    current?: number;
+    pageSize?: number;
+    [k: string]: unknown;
+  };
+  return {
+    pageNum: current ?? 1,
+    pageSize: pageSize ?? 10,
+    ...rest,
+  };
+}
+
 export const errorConfig: RequestConfig = {
-  // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
-    // 错误抛出
-    errorThrower: (res) => {
-      const { success, data, errorCode, errorMessage, showType } =
-        res as unknown as ResponseStructure;
-      if (!success) {
-        const error: any = new Error(errorMessage);
-        error.name = 'BizError';
-        error.info = { errorCode, errorMessage, showType, data };
-        throw error; // 抛出自制的错误
-      }
-    },
-    // 错误接收及处理
+    errorThrower: () => {},
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
-      // 我们的 errorThrower 抛出的错误。
-      if (error.name === 'BizError') {
-        const errorInfo: ResponseStructure | undefined = error.info;
-        if (errorInfo) {
-          const { errorMessage, errorCode } = errorInfo;
-          switch (errorInfo.showType) {
-            case ErrorShowType.SILENT:
-              // do nothing
-              break;
-            case ErrorShowType.WARN_MESSAGE:
-              message.warning(errorMessage);
-              break;
-            case ErrorShowType.ERROR_MESSAGE:
-              message.error(errorMessage);
-              break;
-            case ErrorShowType.NOTIFICATION:
-              notification.open({
-                title: errorCode,
-                description: errorMessage,
-              });
-              break;
-            case ErrorShowType.REDIRECT:
-              window.location.href = '/user/login';
-              break;
-            default:
-              message.error(errorMessage);
+      if (error?.name === 'BizError') {
+        message.error(error?.info?.errorMessage || '业务错误');
+        return;
+      }
+      if (error?.response) {
+        const status = error.response.status;
+        if (status === 401) {
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          const { pathname, search, hash } = window.location;
+          if (pathname !== loginPath) {
+            history.replace(
+              `${loginPath}?redirect=${encodeURIComponent(pathname + search + hash)}`,
+            );
           }
+          message.error('登录已失效，请重新登录');
+          return;
         }
-      } else if (error.response) {
-        // Axios 的错误
-        // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        message.error(`Response status:${error.response.status}`);
-      } else if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        message.error(`请求失败 (${status})`);
+        return;
+      }
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
         message.error(
           getIntl().formatMessage({
             id: 'app.request.offline',
-            defaultMessage:
-              'Network unavailable. Please check your connection and try again.',
+            defaultMessage: '网络不可用，请检查连接后重试',
           }),
         );
-      } else if (error.request) {
-        message.error('None response! Please retry.');
-      } else {
-        message.error('Request error, please retry.');
+        return;
       }
+      message.error('请求异常，请稍后重试');
     },
   },
 
-  // 请求拦截器
+  // 请求拦截器：注入 token + 把分页参数转后端约定
   requestInterceptors: [
     (config: RequestOptions) => {
-      // 拦截请求配置，进行个性化处理。
-      // 示例：为请求附加 token（按需启用）
-      // const token = localStorage.getItem('token');
-      // if (token) {
-      //   config.headers = { ...config.headers, Authorization: `Bearer ${token}` };
-      // }
+      const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+      if (token) {
+        config.headers = {
+          ...(config.headers ?? {}),
+          Authorization: `Bearer ${token}`,
+        };
+      }
+      if (isTableLikeRequest(config)) {
+        config.params = toBackendQuery((config.params ?? {}) as never);
+      }
       return config;
     },
   ],
 
-  // 响应拦截器
-  responseInterceptors: [],
+  // 响应拦截器：用 transform / throwIfBizError 把 {code,message,data} 适配前端的两种消费方式
+  //   ① 列表场景：response.data = { data: records[], total: N }
+  //   ② 其它场景：response.data = { data: 后端业务字段, success }
+  // 这样 service 函数既能用 destructure 取 data，也能让 ProTable request 直接拿 data/total。
+  responseInterceptors: [
+    (response: any) => {
+      const config = response?.config as RequestOptions | undefined;
+      const payload = (response?.data ?? response) as BizResponse;
+      const bizOk = payload?.code === SUCCESS_CODE;
+
+      if (!bizOk) {
+        const err: Error & {
+          info?: { errorCode: string; errorMessage: string };
+        } = new Error(payload?.message || '业务错误');
+        err.name = 'BizError';
+        err.info = {
+          errorCode: payload?.code ?? '',
+          errorMessage: payload?.message || '业务错误',
+        };
+        throw err;
+      }
+
+      if (isTableLikeRequest(config)) {
+        // 后端分页响应统一包成 Result<PageResult<T>> = { code, message, data: { total, pageNum, pageSize, pages, records } }
+        // 部分接口可能扁平返回 records/total 在外层
+        const payloadData = payload?.data as
+          | { records?: unknown[]; total?: number }
+          | undefined;
+        const records =
+          (payloadData && Array.isArray(payloadData.records)
+            ? payloadData.records
+            : Array.isArray(payload?.records)
+              ? payload.records
+              : []) ?? [];
+        const total =
+          payloadData?.total ?? (payload as { total?: number })?.total ?? 0;
+        return {
+          ...response,
+          data: {
+            data: records,
+            total: Number(total) || 0,
+            success: true,
+          },
+        };
+      }
+
+      return {
+        ...response,
+        data: {
+          data: payload?.data as unknown,
+          success: true,
+        },
+      };
+    },
+  ],
 };
+
+export { ACCESS_TOKEN_KEY, isDev, loginPath, REFRESH_TOKEN_KEY, SUCCESS_CODE };

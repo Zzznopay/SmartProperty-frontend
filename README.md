@@ -1,164 +1,83 @@
-<h1 align="center">Ant Design Pro</h1>
+# 智能物业管理系统 - 前端
 
-<div align="center">
+智能物业管理系统（和家云服务管理云平台）的 Web 管理端，基于 [Ant Design Pro](https://pro.ant.design/) 脚手架开发，对接[智能物业系统后端](https://github.com/Zzznopay/SmartProperty)（Spring Cloud 微服务架构）。
 
-An out-of-box UI solution for enterprise applications as a React boilerplate.
+## 技术栈
 
-[![CI](https://github.com/ant-design/ant-design-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/ant-design/ant-design-pro/actions/workflows/ci.yml)
-[![GitHub release](https://img.shields.io/github/v/release/ant-design/ant-design-pro.svg)](https://github.com/ant-design/ant-design-pro/releases)
-[![Build With Utoo](https://img.shields.io/badge/build%20with-utoo-028fe4.svg)](https://utoo.land)
-[![Build With Umi](https://img.shields.io/badge/build%20with-umi-028fe4.svg)](https://umijs.org/)
-[![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
-[![Ant Design](https://badgen.net/badge/icon/Ant%20Design?icon=https://gw.alipayobjects.com/zos/antfincdn/Pp4WPgVDB3/KDpgvguMpGfqaHPjicRK.svg&label)](https://ant.design/)
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| React | 19 | UI 框架 |
+| UmiJS Max | 4 | 企业级前端框架（路由 / 构建 / 插件体系） |
+| Ant Design | 6 | UI 组件库 |
+| @ant-design/pro-components | 3 | Pro 表格 / 表单 / 布局组件 |
+| TypeScript | 5+ | 类型安全 |
+| TailwindCSS | 4 | 原子化样式 |
+| @tanstack/react-query | 5 | 服务端状态管理 |
+| Biome | 2 | 代码规范检查与格式化 |
+| Vitest | 4 | 单元测试 |
 
-Language: English | [简体中文](./README.zh-CN.md)
+> 环境要求：Node.js >= 22
 
-<img width="1718" height="1191" alt="light theme preview" src="https://github.com/user-attachments/assets/74ad0b4a-e086-4955-8edd-9f2cff31aee8" />
-<img width="1718" height="1191" alt="dark theme preview" src="https://github.com/user-attachments/assets/d4bcb7c1-42c7-4c0f-b130-1193a931f9f7" />
+## 功能模块
 
-</div>
+### 系统基础服务 `/system`
 
-- Preview: https://preview.pro.ant.design
-- Documentation: [docs/cheatsheet.en-US.md](./docs/cheatsheet.en-US.md)
-- ChangeLog: https://github.com/ant-design/ant-design-pro/releases
-- FAQ: [docs/cheatsheet.en-US.md#faq](./docs/cheatsheet.en-US.md#faq)
-- **v6 Released!** — [What's new in v6](https://github.com/ant-design/ant-design-pro/releases/tag/v6.0.0)
+用户管理、角色管理、菜单管理、部门管理、字典管理、物业公司、登录日志、操作日志。
 
-## Features
+### 房产财务服务 `/property`
 
-- :bulb: **TypeScript**: A language for application-scale JavaScript
-- :scroll: **Blocks**: Build page with block template
-- :gem: **Neat Design**: Built on [Ant Design 6](https://ant.design/) specification
-- :triangular_ruler: **Common Templates**: Typical templates for enterprise applications
-- :rocket: **State of The Art Development**: Newest development stack of React 19/[Umi Max 4](https://umijs.org/)/[antd 6](https://ant.design/)/[utoopack](https://utoo.land)
-- :iphone: **Responsive**: Designed for variable screen sizes
-- :art: **Theming**: Customizable theme with [Tailwind CSS v4](https://tailwindcss.com/) + [antd-style](https://github.com/ant-design/antd-style)
-- :globe_with_meridians: **International**: Built-in i18n solution
-- :gear: **Best Practices**: Solid workflow to make your code healthy
-- :1234: **Mock development**: Easy to use mock development solution
-- :robot: **AI Assistant**: Built-in AI chatbot page powered by [Ant Design X](https://x.ant.design/)
-- :white_check_mark: **UI Test**: Fly safely with unit and e2e tests
+- **房产**：小区管理、楼宇管理、单元管理、房间管理
+- **业主 / 租户**：业主管理、租户管理
+- **交易**：销售合同、验房记录、装修记录、租赁合同
+- **财务**：费项设置、台帐管理、收费管理、票据管理、车位管理、预收款、抄表管理
 
-## Templates
+### 运营管理服务 `/operation`
 
-```
-- Welcome
-- Dashboard
-  - Analysis
-  - Monitor
-  - Workplace
-- Form
-  - Basic Form
-  - Step Form
-  - Advanced Form
-- List
-  - Search List (Articles/Projects/Applications)
-  - Table List
-  - Basic List
-  - Card List
-- Profile
-  - Basic Profile
-  - Advanced Profile
-- Result
-  - Success
-  - Fail
-- Exception
-  - 403
-  - 404
-  - 500
-- Account
-  - Account Center
-  - Account Settings
-- AI Assistant
-- User
-  - Login
-  - Register
-  - Register Result
-```
+- **服务工单**：报修 / 投诉等工单的受理与跟踪
+- **保洁绿化**：清洁安排、清洁检查、绿化植被、绿化检查
+- **消防安全**：消防设施、消防巡查、消防演练、社区活动
+- **保安管理**：保安安排、执勤记录、来访登记、物品出入、车辆进出
+- **行政办公**：公告管理、规章制度、意见箱、投票调查、消息中心
+- **业委会**：业委会成员、业委会会议
 
-## Usage
-
-### Get Started
-
-Clone or download this repository to your local machine:
+## 快速开始
 
 ```bash
-git clone --depth=1 https://github.com/ant-design/ant-design-pro.git myapp
-cd myapp
-```
-
-### Installation
-
-```bash
+# 安装依赖
 npm install
+
+# 启动开发服务（http://localhost:5173）
+npm run dev
 ```
 
-### Development
+前端通过本地代理访问后端：开发环境下 `/api/` 请求会被代理到 `http://localhost:8000`（smart-property-gateway 网关端口），代理配置见 [config/proxy.ts](config/proxy.ts)。需要先启动后端服务，登录与各业务接口才能正常工作；后端的部署与启动步骤见后端仓库的 `deploy/DEPLOY.md`。
 
-```bash
-# Start development server (full version by default)
-npm start
+## 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `npm run dev` | 启动开发服务（端口 5173） |
+| `npm run start:no-mock` | 关闭 Mock 启动开发服务 |
+| `npm run build` | 生产构建，产物输出到 `dist/` |
+| `npm run preview` | 本地预览构建产物 |
+| `npm run lint` | Biome 规范检查 + TypeScript 类型检查 |
+| `npm run biome` | Biome 自动修复与格式化 |
+| `npm run test` | 运行单元测试 |
+| `npm run openapi` | 根据后端 OpenAPI 规范生成接口代码 |
+
+## 目录结构
+
 ```
-
-### Simplify to Simple Version
-
-This project includes all blocks by default. If you need a minimal version, run:
-
-```bash
-npm run simple
+├── config/               # UmiJS 配置（路由、代理、构建等）
+│   ├── config.ts         # 主配置
+│   ├── routes.ts         # 路由与菜单
+│   └── proxy.ts          # 本地开发代理
+├── src/
+│   ├── pages/            # 页面组件（按 system / property / operation 分模块）
+│   ├── components/       # 通用业务组件
+│   ├── locales/          # 国际化文案（zh-CN / en-US）
+│   ├── services/         # 接口请求层
+│   └── access.ts         # 权限定义
+├── mock/                 # 本地 Mock 数据
+└── tests/                # 测试
 ```
-
-This will:
-- Remove extra page directories (dashboard, form, list/*, profile, result, exception, account, etc.)
-- Remove extra mock files
-- Replace routes with simple version
-- Remove extra dependencies from package.json
-
-**Note**: This operation is irreversible and will permanently delete files.
-
-### Build
-
-```bash
-npm run build
-```
-
-## AI Skills (Claude Code)
-
-This project ships with two built-in [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills) in `.claude/skills/`:
-
-| Skill | Trigger | Description |
-|---|---|---|
-| `/pro-upgrade` | "upgrade pro", "update to latest" | Auto-upgrade to the latest Ant Design Pro version. Diffs the latest template, merges framework changes while preserving your business code. |
-| `/antd` | antd-related code or questions | Query antd component APIs, props, tokens, demos; lint for deprecated usage; migrate between versions — all via `@ant-design/cli`. |
-
-**Usage in Claude Code:**
-
-```bash
-# Upgrade the project to latest Pro version
-/pro-upgrade
-
-# Query antd component info, debug issues, run lint, etc.
-/antd
-```
-
-> 💡 If your project was cloned from this repo, these skills are already included — no installation needed. To get the latest skill definitions, pull the updates from the template or run `npx skills add ant-design/ant-design-pro` to refresh them.
-
-## Browsers support
-
-Modern browsers.
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| --- | --- | --- | --- |
-| Edge | last 2 versions | last 2 versions | last 2 versions |
-
-## Contributing
-
-Any type of contribution is welcome, here are some examples of how you may contribute to this project:
-
-- Use Ant Design Pro in your daily work.
-- Submit [issues](http://github.com/ant-design/ant-design-pro/issues) to report bugs or ask questions.
-- Propose [pull requests](http://github.com/ant-design/ant-design-pro/pulls) to improve our code.
-
-<a href="https://openomy.app/github/ant-design/ant-design-pro" target="_blank" style="display: block; width: 100%;" align="center">
-  <img src="https://openomy.app/svg?repo=ant-design/ant-design-pro&chart=bubble&latestMonth=3" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
-</a>
