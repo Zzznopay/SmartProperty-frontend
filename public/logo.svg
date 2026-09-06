@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>智能物业管理系统</title>
+  <defs>
+    <linearGradient id="sp-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E6FFF"/>
+      <stop offset="1" stop-color="#00C2A8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#sp-bg)"/>
+  <!-- 高层楼栋 -->
+  <rect x="312" y="128" width="104" height="260" rx="14" fill="#FFFFFF" opacity="0.95"/>
+  <g fill="#1E6FFF" opacity="0.45">
+    <rect x="330" y="156" width="26" height="26" rx="6"/>
+    <rect x="370" y="156" width="26" height="26" rx="6"/>
+    <rect x="330" y="200" width="26" height="26" rx="6"/>
+    <rect x="370" y="200" width="26" height="26" rx="6"/>
+    <rect x="330" y="244" width="26" height="26" rx="6"/>
+    <rect x="370" y="244" width="26" height="26" rx="6"/>
+  </g>
+  <!-- 住宅本体 -->
+  <rect x="112" y="260" width="176" height="128" rx="14" fill="#FFFFFF"/>
+  <path d="M176 388 V336 a24 24 0 0 1 48 0 V388 Z" fill="url(#sp-bg)"/>
+  <g fill="#1E6FFF" opacity="0.45">
+    <rect x="128" y="304" width="32" height="32" rx="6"/>
+    <rect x="240" y="304" width="32" height="32" rx="6"/>
+  </g>
+  <!-- 屋顶 -->
+  <path d="M96 276 L200 166 L304 276" fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
