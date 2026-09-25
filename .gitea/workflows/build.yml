@@ -1,0 +1,33 @@
+name: Build
+on:
+  push:
+    branches: [ 'main' ]
+    tags: [ 'v*' ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with NPM
+        run: |
+          npm ci
+          npm run build
+          tar -czf dist.tar.gz dist
+      - name: Upload artifact to Suiren
+        run: |
+          VERSION="${GITEA_REF_NAME#v}"
+          FILE=$(ls dist.tar.gz | head -n 1)
+          curl -sf -X POST "$SUIREN_URL/api/v1/artifacts/upload" \
+            -H "Authorization: Bearer $SUIREN_TOKEN" \
+            -F "applicationId=5" \
+            -F "version=$VERSION-SNAPSHOT" \
+            -F "type=TAR" \
+            -F "name=smart-property-frontend" \
+            -F "externalRunId=$GITHUB_RUN_ID" \
+            -F "file=@$FILE"
+        env:
+          # 如需变更，在此直接修改为 Suiren 服务可达地址
+          SUIREN_URL: http://host.docker.internal:8080
+          SUIREN_TOKEN: ${{ secrets.SUIREN_TOKEN }}
