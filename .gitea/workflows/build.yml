@@ -14,12 +14,20 @@ jobs:
         run: |
           npm ci
           npm run build
-          tar -czf dist.tar.gz dist
+          # 部署约定：TAR 顶层目录为 webroot/，目标机 restart.sh 服务 current/webroot，
+          # healthz 供静态站点的健康检查端点
+          rm -rf webroot && mv dist webroot
+          echo OK > webroot/healthz
+          tar -czf dist.tar.gz webroot
       - name: Upload artifact to Suiren
         run: |
-          VERSION="${GITEA_REF_NAME#v}"
-          FILE=$(ls dist.tar.gz | head -n 1)
-          curl -sf -X POST "$SUIREN_URL/api/v1/artifacts/upload" \
+          # act 里 GITHUB_REF_NAME 为短名（main 或 tag 名）；GITEA_REF_NAME 未设置，兜底防空值
+          VERSION="${GITHUB_REF_NAME##*/}"
+          VERSION="${VERSION:-unknown}"
+          # act 以 bash -e -o pipefail 执行：发现命令必须自行吞掉非零退出，否则匹配不到文件时直接终止
+          FILE=$( ( ls dist.tar.gz ) 2>/dev/null | head -n 1 || true )
+          if [ -z "$FILE" ]; then echo "no artifact file found (check the artifact discovery command)" >&2; exit 1; fi
+          curl -sS --fail-with-body -X POST "$SUIREN_URL/api/v1/artifacts/upload" \
             -H "Authorization: Bearer $SUIREN_TOKEN" \
             -F "applicationId=5" \
             -F "version=$VERSION-SNAPSHOT" \
@@ -28,6 +36,7 @@ jobs:
             -F "externalRunId=$GITHUB_RUN_ID" \
             -F "file=@$FILE"
         env:
+          # SUIREN_TOKEN 使用平台「CI 凭据」页创建的长效令牌（suici_ 前缀，仅限制品上传）
           # 如需变更，在此直接修改为 Suiren 服务可达地址
           SUIREN_URL: http://host.docker.internal:8080
           SUIREN_TOKEN: ${{ secrets.SUIREN_TOKEN }}
